@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    var socket;
+    //判断当前浏览器是否支持websocket
+    if (window.WebSocket){
+        socket = new WebSocket("ws://localhost:8081/hello");
+        //相当于channelRead0，ev可以收到服务器端回送的消息
+        socket.onmessage = function (ev) {
+            console.log("111");
+            var rt = document.getElementById("xiaohong")
+            rt.value = rt.value + "\n" + ev.data
+        }
+        //相当于连接开启(感知到连接开启)
+        socket.onopen = function (ev) {
+            var rt = document.getElementById("xiaohong")
+            rt.value = "连接开启了。。。"
+        }
+        //相当于连接关闭（感知到连接关闭）
+        socket.onclose = function (ev) {
+            var rt = document.getElementById("xiaohong")
+            rt.value = rt.value + "\n" + "连接关闭了。。。"
+        }
+    }else {
+        alert("当前浏览器不支持webSocket")
+    }
+
+    //发送消息到服务器
+    function send(message){
+        //判断websocket是否成功连接，创建好再继续操作
+        if (!window.socket) {
+            return;
+        }
+        if (socket.readyState === WebSocket.OPEN){
+            //socket为连接状态，通过socket发送消息
+            socket.send(message)
+        }else {
+            alert("连接尚未开启...")
+        }
+    }
+</script>
+
+<form onsubmit="return false">
+    <textarea id="xiaohong" name="message" style="height: 300px;width: 300px;"></textarea>
+    <input type="button" value="发送消息" onclick="send('小红：'+this.form.message.value)">
+</form>
+</body>

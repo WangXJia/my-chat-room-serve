@@ -1,0 +1,7 @@
+
+
+netty:
+  port: 8081
+  path: /chat
+server:
+  port: 8082
